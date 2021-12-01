@@ -15,7 +15,6 @@ import Avatar from './Avatar';
 
 const WalletConnect = () => {
   const dispatch = useDispatch();
-
   const wallet = useSelector((state) => state.wallet);
 
   const setWallet = async (address) => {

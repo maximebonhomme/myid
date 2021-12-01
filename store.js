@@ -1,10 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 
 import wallet from './reducers/wallet';
+import tokens from './reducers/tokens';
 
 export function makeStore() {
   return configureStore({
-    reducer: { wallet }
+    reducer: { wallet, tokens }
   });
 }
 

@@ -169,3 +169,10 @@ p {
   position: fixed;
   bottom: 20px;
 }
+
+.nft {
+  max-width: 400px;
+  width: 100%;
+  border-radius: 5px;
+  background-color: black;
+}

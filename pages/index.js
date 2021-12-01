@@ -2,6 +2,7 @@ import { Toaster } from 'react-hot-toast';
 import { useEffect, useState } from 'react';
 
 import WalletConnect from '../components/WalletConnect';
+import NFTGallery from '../components/NFTGallery';
 
 export default function Home() {
   const [tokenURI, setTokenURI] = useState(null);
@@ -15,6 +16,7 @@ export default function Home() {
     <div>
       <Toaster />
       <WalletConnect />
+      <NFTGallery />
     </div>
   );
 }
