@@ -26,11 +26,19 @@ export const getBalance = async (address) => {
   }
 };
 
-export const getRawAddress = async (address) => {
+export const getRawAddress = async (_address) => {
   const provider = getProvider();
 
   try {
-    const address = await provider.resolveName(address);
+    const address = await provider.resolveName(_address);
+
+    if (!address) {
+      return {
+        status: 404,
+        message: 'Address not found',
+        data: null
+      };
+    }
 
     return {
       status: 200,

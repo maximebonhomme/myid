@@ -60,7 +60,14 @@ const NFTGallery = () => {
     <div>
       {nfts.length > 0 &&
         nfts.map((nft) => {
-          return <img className="nft" src={nft.image} alt={nft.name} />;
+          return (
+            <img
+              key={nft.tokenId}
+              className="nft"
+              src={nft.image}
+              alt={nft.name}
+            />
+          );
         })}
     </div>
   );
