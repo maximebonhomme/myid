@@ -1,7 +1,11 @@
-import styles from '../styles/Home.module.css';
+import { Toaster } from 'react-hot-toast';
+import { useEffect } from 'react';
+
+import WalletConnect from '../components/WalletConnect';
 
 import { getProvider } from '../controllers/wallet';
-import { useEffect } from 'react';
+
+import styles from '../styles/Home.module.css';
 
 export default function Home() {
   useEffect(() => {
@@ -10,5 +14,11 @@ export default function Home() {
     console.log('provider', provider);
   }, []);
 
-  return <div className={styles.container}>Hello world</div>;
+  return (
+    <div>
+      <Toaster />
+      <WalletConnect />
+      <div className={styles.container}>Hello world</div>
+    </div>
+  );
 }
