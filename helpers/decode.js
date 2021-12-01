@@ -20,12 +20,8 @@ export const processTokenURI = async (tokenURI, tokenId) => {
     };
   } else if (tokenURI.includes('data:application/json')) {
     return decodeBase64(tokenURI);
-  } else if (tokenURI.includes('https://api.artblocks.io')) {
-    return {
-      image: `https://api.artblocks.io/image/${tokenId}`
-    };
   } else if (tokenURI.includes('https://')) {
-    const json = await axios.get(tokenURI);
+    const json = await axios.post('/api/metadata', { tokenURI });
 
     return {
       ...json.data

@@ -12,10 +12,17 @@ export const tokensSlice = createSlice({
     },
     setNFTs: (state, action) => {
       state.nfts = action.payload;
+    },
+    clearNFTs: (state) => {
+      state.nfts = [];
+    },
+    addNFT: (state, action) => {
+      state.nfts.push(action.payload);
     }
   }
 });
 
-export const { setTransactions, setNFTs } = tokensSlice.actions;
+export const { setTransactions, setNFTs, clearNFTs, addNFT } =
+  tokensSlice.actions;
 
 export default tokensSlice.reducer;
