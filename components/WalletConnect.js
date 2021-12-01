@@ -1,36 +1,50 @@
+import { ethers } from 'ethers';
 import { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import toast from 'react-hot-toast';
 
-import Avatar from './Avatar';
+import { setBalance, setAddress, setEns } from '../reducers/wallet';
 
 import {
   connectWallet,
-  getCurrentConnectedWallet
+  getCurrentConnectedWallet,
+  getBalance,
+  getEns,
+  getRawAddress
 } from '../controllers/wallet';
 
+import Avatar from './Avatar';
+
 const WalletConnect = () => {
-  const [walletAddress, setWalletAddress] = useState(null);
+  const dispatch = useDispatch();
+
+  const wallet = useSelector((state) => state.wallet);
+
+  const setWallet = async (address) => {
+    if (address) {
+      const balance = await getBalance(address);
+      const ens = await getEns(address);
+
+      dispatch(setBalance(balance.data));
+      dispatch(setAddress(address));
+      dispatch(setEns(ens.data));
+    }
+  };
 
   const handleConnectWallet = async () => {
     const response = await connectWallet();
     const address = response.data[0];
-    setWalletAddress(address);
-
-    if (response.status === 200) {
-      // toast.success(response.message)
-    } else {
-      // toast.error(response.message)
-    }
+    setWallet(address);
   };
 
   const addWalletListener = () => {
     if (window.ethereum) {
       window.ethereum.on('accountsChanged', (accounts) => {
         if (accounts.length > 0) {
-          setWalletAddress(accounts[0]);
+          setWallet(accounts[0]);
           toast.success('Wallet connected');
         } else {
-          setWalletAddress(null);
+          setWallet(null);
           toast.success('Wallet disconnected');
         }
       });
@@ -43,7 +57,7 @@ const WalletConnect = () => {
     async function fetchWallet() {
       const response = await getCurrentConnectedWallet();
       const { status, message, data } = response;
-      setWalletAddress(data[0]);
+      setWallet(data[0]);
 
       if (status === 200) {
         toast.success(message);
@@ -58,8 +72,8 @@ const WalletConnect = () => {
 
   return (
     <div className="connect">
-      {walletAddress ? (
-        <Avatar address={walletAddress} />
+      {wallet.address ? (
+        <Avatar address={wallet.address} />
       ) : (
         <button onClick={handleConnectWallet}>Connect Wallet</button>
       )}

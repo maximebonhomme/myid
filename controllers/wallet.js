@@ -1,13 +1,77 @@
 import { ethers } from 'ethers';
 
-export const getProvider = () => {
+const getProvider = () => {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
 
-  return {
-    status: 200,
-    message: 'Provider found',
-    data: provider
-  };
+  return provider;
+};
+
+export const getBalance = async (address) => {
+  const provider = getProvider();
+
+  try {
+    const balance = await provider.getBalance(address);
+
+    return {
+      status: 200,
+      message: 'Balance found',
+      data: ethers.utils.formatEther(balance)
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      message: error.message,
+      data: null
+    };
+  }
+};
+
+export const getRawAddress = async (address) => {
+  const provider = getProvider();
+
+  try {
+    const address = await provider.resolveName(address);
+
+    return {
+      status: 200,
+      message: 'Address found',
+      data: address
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      message: error.message,
+      data: null
+    };
+  }
+};
+
+export const getEns = async (address) => {
+  const provider = getProvider();
+
+  try {
+    const ens = await provider.lookupAddress(address);
+
+    if (!ens) {
+      return {
+        status: 404,
+        message: 'No ENS name found',
+        data: null
+      };
+    }
+
+    return {
+      status: 200,
+      message: 'ENS found',
+      data: ens
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      message: error.message,
+      data: null
+    };
+  }
 };
 
 export const connectWallet = async () => {
