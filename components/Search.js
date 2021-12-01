@@ -20,10 +20,6 @@ const Search = () => {
       const ens = await getEns(address);
       const balance = await getBalance(address);
 
-      console.log('address', address);
-      console.log('ens', ens);
-      console.log('balance', balance);
-
       dispatch(setAddress(address));
       dispatch(setBalance(balance.data));
       dispatch(setEns(ens.data));

@@ -29,10 +29,11 @@ const NFTGallery = () => {
     for (const tx of transactions) {
       const { contractAddress, tokenID, tokenName, tokenSymbol } = tx;
       const abi = await getContractABI(contractAddress);
+      console.log('abi', abi);
       const cleanABI = JSON.parse(abi.data);
       const tokenURI = await getTokenURI(contractAddress, cleanABI, tokenID);
 
-      console.log('abi', cleanABI);
+      console.log('cleanABI', cleanABI);
       console.log('tokenURI', tokenURI);
 
       nfts.push({
