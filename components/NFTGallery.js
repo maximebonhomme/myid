@@ -32,6 +32,9 @@ const NFTGallery = () => {
       const cleanABI = JSON.parse(abi.data);
       const tokenURI = await getTokenURI(contractAddress, cleanABI, tokenID);
 
+      console.log('abi', cleanABI);
+      console.log('tokenURI', tokenURI);
+
       nfts.push({
         tokenId: tokenID,
         contractAddress,

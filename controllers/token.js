@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 import config from '../config';
 import axios from 'axios';
-import { decodeBase64 } from '../helpers/decode';
+import { decodeBase64, processTokenURI } from '../helpers/decode';
 
 export const getERC721ByAddress = async (address) => {
   try {
@@ -27,12 +27,13 @@ export const getTokenURI = async (contractAddress, abi, tokenId) => {
   try {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const contract = new ethers.Contract(contractAddress, abi, provider);
-    const tokenURI = await contract.tokenURI(tokenId);
+    const _tokenURI = await contract.tokenURI(tokenId);
+    const tokenURI = await processTokenURI(_tokenURI);
 
     return {
       status: 200,
       message: 'TokenURI received',
-      data: decodeBase64(tokenURI)
+      data: tokenURI
     };
   } catch (error) {
     return {
