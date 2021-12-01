@@ -1,5 +1,4 @@
-import { ethers } from 'ethers';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import toast from 'react-hot-toast';
 
@@ -9,8 +8,7 @@ import {
   connectWallet,
   getCurrentConnectedWallet,
   getBalance,
-  getEns,
-  getRawAddress
+  getEns
 } from '../controllers/wallet';
 
 import Avatar from './Avatar';
@@ -73,7 +71,7 @@ const WalletConnect = () => {
   return (
     <div className="connect">
       {wallet.address ? (
-        <Avatar address={wallet.address} />
+        <Avatar address={wallet.address} ens={wallet.ens} />
       ) : (
         <button onClick={handleConnectWallet}>Connect Wallet</button>
       )}
