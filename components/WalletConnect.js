@@ -70,11 +70,11 @@ const WalletConnect = () => {
 
   return (
     <div className="connect">
-      {wallet.address ? (
+      {/* {wallet.address ? (
         <Avatar address={wallet.address} ens={wallet.ens} />
       ) : (
         <button onClick={handleConnectWallet}>Connect Wallet</button>
-      )}
+      )} */}
     </div>
   );
 };

@@ -58,7 +58,6 @@ const NFTGallery = () => {
 
   return (
     <div>
-      <div>nft gallery</div>
       {nfts.length > 0 &&
         nfts.map((nft) => {
           return <img className="nft" src={nft.image} alt={nft.name} />;

@@ -11,6 +11,14 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   margin: 0;
+  font-size: 14px;
+}
+
+input {
+  appearance: none;
+  border: none;
+  box-shadow: none;
+  outline: none;
 }
 
 button {
@@ -175,4 +183,13 @@ p {
   width: 100%;
   border-radius: 5px;
   background-color: black;
+}
+
+.search {
+  color: white;
+  width: 100%;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  border-radius: 16px;
 }
