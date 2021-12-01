@@ -19,12 +19,13 @@ const WalletConnect = () => {
   const wallet = useSelector((state) => state.wallet);
 
   const setWallet = async (address) => {
+    dispatch(setAddress(address));
+
     if (address) {
       const balance = await getBalance(address);
       const ens = await getEns(address);
 
       dispatch(setBalance(balance.data));
-      dispatch(setAddress(address));
       dispatch(setEns(ens.data));
     }
   };
