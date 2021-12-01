@@ -18,6 +18,7 @@ const NFTGallery = () => {
     if (response.status === 200) {
       const result = response.data;
       dispatch(setTransactions(result));
+      console.log('transactions', result);
     }
   };
 
@@ -40,6 +41,7 @@ const NFTGallery = () => {
       });
     }
 
+    console.log('nfts', nfts);
     dispatch(setNFTs(nfts));
   };
 
