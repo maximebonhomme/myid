@@ -1,32 +1,51 @@
 import { useMoralisWeb3Api } from 'react-moralis';
-import { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 
-import { setNFTs } from '../reducers/nfts';
+import { updateNFTs } from '../reducers/nfts';
 
 import { processNfts } from '../helpers/decode';
+import usePrevious from '../helpers/usePrevious';
+
+import config from '../config';
 
 const NFTGallery = () => {
+  const [internalPage, setPage] = useState(0);
   const dispatch = useDispatch();
   const Web3Api = useMoralisWeb3Api();
   const address = useSelector((state) => state.wallet.address);
-  const nfts = useSelector((state) => state.nfts.result);
+  const nfts = useSelector((state) => state.nfts.list);
+  const { page, pageSize, total } = useSelector(
+    (state) => state.nfts,
+    shallowEqual
+  );
+  const previousAddress = usePrevious(address);
 
   const getUserNFTs = async () => {
     const _nfts = await Web3Api.account.getNFTs({
-      address: address
+      address: address,
+      limit: config.listLimit,
+      offset: internalPage * config.listLimit
     });
-
-    console.log('_nfts', _nfts);
 
     const results = await processNfts(_nfts);
 
-    dispatch(setNFTs(results));
+    dispatch(updateNFTs(results));
+  };
+
+  const handleLoadMore = () => {
+    const newPage = internalPage + 1;
+    console.log('newPage', newPage);
+    setPage(newPage);
   };
 
   useEffect(() => {
     getUserNFTs();
-  }, [address]);
+
+    if (previousAddress !== address) {
+      setPage(0);
+    }
+  }, [address, internalPage]);
 
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap' }}>
@@ -36,7 +55,7 @@ const NFTGallery = () => {
 
           if (nft.videoURI && nft.videoURI.includes('.mp4')) {
             return (
-              <video autoPlay loop>
+              <video autoPlay loop className="nft">
                 <source src={nft.videoURI} type="video/mp4" />
               </video>
             );
@@ -51,6 +70,11 @@ const NFTGallery = () => {
             />
           );
         })}
+      <>
+        {(internalPage + 1) * pageSize < total && (
+          <button onClick={handleLoadMore}>load more</button>
+        )}
+      </>
     </div>
   );
 };

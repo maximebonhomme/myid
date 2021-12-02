@@ -3,6 +3,7 @@ import throttle from 'lodash/throttle';
 import { useDispatch } from 'react-redux';
 
 import { setAddress, setEns } from '../reducers/wallet';
+import { clearNFTs } from '../reducers/nfts';
 
 const Search = () => {
   const { web3, isWeb3Enabled } = useMoralis();
@@ -26,6 +27,7 @@ const Search = () => {
   };
 
   const handleChange = async (event) => {
+    dispatch(clearNFTs());
     const value = event.target.value;
 
     if (value.startsWith('0x')) {
