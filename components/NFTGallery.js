@@ -16,6 +16,9 @@ const NFTGallery = () => {
     const _nfts = await Web3Api.account.getNFTs({
       address: address
     });
+
+    console.log('_nfts', _nfts);
+
     const results = await processNfts(_nfts);
 
     dispatch(setNFTs(results));
