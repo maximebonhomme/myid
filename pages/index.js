@@ -15,9 +15,13 @@ export default function Home() {
 
       <Search />
       {wallet.address && (
-        <h2 style={{ textAlign: 'center' }}>{wallet.ens || wallet.address}</h2>
+        <>
+          <h2 style={{ textAlign: 'center' }}>
+            {wallet.ens || wallet.address}
+          </h2>
+          <NFTGallery />
+        </>
       )}
-      <NFTGallery />
     </div>
   );
 }

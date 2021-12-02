@@ -1,102 +1,53 @@
+import { useMoralisWeb3Api } from 'react-moralis';
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import Masonry from 'react-masonry-css';
 
-import { getContractABI } from '../controllers/contract';
+import { setNFTs } from '../reducers/nfts';
 
-import { getERC721ByAddress, getTokenURI } from '../controllers/token';
-
-import {
-  setTransactions,
-  setNFTs,
-  addNFT,
-  clearNFTs
-} from '../reducers/tokens';
+import { processNfts } from '../helpers/decode';
 
 const NFTGallery = () => {
   const dispatch = useDispatch();
+  const Web3Api = useMoralisWeb3Api();
   const address = useSelector((state) => state.wallet.address);
-  const transactions = useSelector((state) => state.tokens.transactions);
-  const nfts = useSelector((state) => state.tokens.nfts);
+  const nfts = useSelector((state) => state.nfts.result);
 
-  const fetchTokens = async () => {
-    if (!address) return;
+  const getUserNFTs = async () => {
+    const _nfts = await Web3Api.account.getNFTs({
+      address: address
+    });
+    const results = await processNfts(_nfts);
 
-    const response = await getERC721ByAddress(address);
-    if (response.status === 200) {
-      const result = response.data;
-      dispatch(setTransactions(result));
-      // console.log('transactions', result);
-    }
-  };
-
-  const fetchTokenURIs = async () => {
-    // const nfts = [];
-    if (transactions.length <= 0) return;
-
-    dispatch(clearNFTs());
-
-    for (const tx of transactions) {
-      const { contractAddress, tokenID, tokenName, tokenSymbol } = tx;
-      const abi = await getContractABI(contractAddress);
-      // console.log('abi', abi);
-      const cleanABI = JSON.parse(abi.data);
-      const tokenURI = await getTokenURI(contractAddress, cleanABI, tokenID);
-
-      // console.log('cleanABI', cleanABI);
-      // console.log('tokenURI', tokenURI);
-
-      dispatch(
-        addNFT({
-          tokenId: tokenID,
-          contractAddress,
-          tokenName,
-          tokenSymbol,
-          ...tokenURI.data
-        })
-      );
-
-      // nfts.push({
-      //   tokenId: tokenID,
-      //   contractAddress,
-      //   tokenName,
-      //   tokenSymbol,
-      //   ...tokenURI.data
-      // });
-    }
-
-    // console.log('nfts', nfts);
+    dispatch(setNFTs(results));
   };
 
   useEffect(() => {
-    fetchTokenURIs();
-  }, [transactions]);
-
-  useEffect(() => {
-    fetchTokens();
-  }, [address]);
+    getUserNFTs();
+  }, []);
 
   return (
-    <div>
-      {nfts.length > 0 && (
-        <Masonry
-          breakpointCols={2}
-          className="my-masonry-grid"
-          columnClassName="my-masonry-grid_column"
-        >
-          {nfts.map((nft) => {
-            if (!nft.image) return null;
+    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+      {nfts.length > 0 &&
+        nfts.map((nft) => {
+          if (!nft.videoURI && !nft.imageURI) return null;
+
+          if (nft.videoURI && nft.videoURI.includes('.mp4')) {
             return (
-              <img
-                key={nft.tokenId}
-                className="nft"
-                src={nft.image}
-                alt={nft.name}
-              />
+              <video autoPlay loop>
+                <source src={nft.videoURI} type="video/mp4" />
+              </video>
             );
-          })}
-        </Masonry>
-      )}
+          }
+
+          return (
+            <img
+              key={nft.token_id}
+              className="nft"
+              src={nft.imageURI}
+              alt={nft.name}
+            />
+          );
+        })}
     </div>
   );
 };

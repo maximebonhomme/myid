@@ -179,10 +179,12 @@ p {
 }
 
 .nft {
-  max-width: 400px;
   width: 100%;
   border-radius: 5px;
-  background-color: black;
+}
+
+.nft-container {
+  padding: 8px;
 }
 
 .search {
@@ -192,19 +194,4 @@ p {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(8px);
   border-radius: 16px;
-}
-
-.my-masonry-grid {
-  display: flex;
-  margin-left: -8px;
-  width: auto;
-}
-.my-masonry-grid_column {
-  padding-left: 8px;
-  background-clip: padding-box;
-}
-
-.my-masonry-grid_column > img {
-  background: grey;
-  margin-bottom: 5px;
 }

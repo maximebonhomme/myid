@@ -1,79 +1,45 @@
 import { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import toast from 'react-hot-toast';
+import { useDispatch } from 'react-redux';
+import { useMoralis, useMoralisWeb3Api } from 'react-moralis';
 
-import { setBalance, setAddress, setEns } from '../reducers/wallet';
-
-import {
-  connectWallet,
-  getCurrentConnectedWallet,
-  getBalance,
-  getEns
-} from '../controllers/wallet';
+import { setBalance, setAddress } from '../reducers/wallet';
 
 import Avatar from './Avatar';
 
 const WalletConnect = () => {
+  const { authenticate, isAuthenticated, user, logout } = useMoralis();
+  const Web3Api = useMoralisWeb3Api();
   const dispatch = useDispatch();
-  const wallet = useSelector((state) => state.wallet);
 
-  const setWallet = async (address) => {
-    dispatch(setAddress(address));
-
-    if (address) {
-      const balance = await getBalance(address);
-      const ens = await getEns(address);
-
-      dispatch(setBalance(balance.data));
-      dispatch(setEns(ens.data));
-    }
+  const handleAuthenticate = () => {
+    authenticate({ signingMessage: 'Signing to localhost baby' });
   };
 
-  const handleConnectWallet = async () => {
-    const response = await connectWallet();
-    const address = response.data[0];
-    setWallet(address);
-  };
+  const setAccount = async () => {
+    if (isAuthenticated) {
+      const address = user.get('ethAddress');
+      dispatch(setAddress(address));
 
-  const addWalletListener = () => {
-    if (window.ethereum) {
-      window.ethereum.on('accountsChanged', (accounts) => {
-        if (accounts.length > 0) {
-          setWallet(accounts[0]);
-          toast.success('Wallet connected');
-        } else {
-          setWallet(null);
-          toast.success('Wallet disconnected');
-        }
+      const balanceResponse = await Web3Api.account.getNativeBalance({
+        chain: 'eth',
+        address: address
       });
-    } else {
-      toast.error('No wallet found');
+
+      dispatch(setBalance(balanceResponse.balance));
     }
   };
 
   useEffect(() => {
-    async function fetchWallet() {
-      const response = await getCurrentConnectedWallet();
-      const { status, message, data } = response;
-      setWallet(data[0]);
-
-      if (status === 200) {
-        toast.success(message);
-      } else {
-        toast.error(message);
-      }
-    }
-
-    fetchWallet();
-    addWalletListener();
-  }, []);
+    setAccount();
+    // eslint-disable-next-line
+  }, [isAuthenticated]);
 
   return (
     <div className="connect">
-      {wallet.address ? (
-        <Avatar address={wallet.address} ens={wallet.ens} />
+      {isAuthenticated ? (
+        <Avatar address={user.get('ethAddress')} ens={null} onClick={logout} />
       ) : (
-        <button onClick={handleConnectWallet}>Connect Wallet</button>
+        <button onClick={handleAuthenticate}>Connect Wallet</button>
       )}
     </div>
   );

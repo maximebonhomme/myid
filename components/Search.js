@@ -1,28 +1,39 @@
+import { useMoralis, useMoralisWeb3Api } from 'react-moralis';
 import throttle from 'lodash/throttle';
 import { useDispatch } from 'react-redux';
 
 import { setAddress, setBalance, setEns } from '../reducers/wallet';
 
-import { getBalance, getEns, getRawAddress } from '../controllers/wallet';
-
 const Search = () => {
+  const { web3, isWeb3Enabled } = useMoralis();
+  const Web3Api = useMoralisWeb3Api();
   const dispatch = useDispatch();
 
+  if (!isWeb3Enabled) return null;
+
+  const resolveEns = async (ens) => {
+    const recordExists = await web3.eth.ens.recordExists(ens);
+    let address = null;
+
+    if (!recordExists) return null;
+
+    try {
+      address = await web3.eth.ens.getAddress(ens);
+    } catch (error) {
+      console.log(error);
+    }
+
+    return address;
+  };
+
   const handleChange = async (event) => {
-    const _address = event.target.value;
+    const address = event.target.value;
+    const ens = await resolveEns(address);
+    const isValid = address.startsWith('0x') || address.endsWith('.eth');
 
-    const addressResponse = await getRawAddress(_address);
-
-    console.log('addressResponse', addressResponse);
-
-    if (addressResponse.status === 200) {
-      const address = addressResponse.data;
-      const ens = await getEns(address);
-      const balance = await getBalance(address);
-
+    if (isValid) {
       dispatch(setAddress(address));
-      dispatch(setBalance(balance.data));
-      dispatch(setEns(ens.data));
+      dispatch(setEns(ens));
     }
   };
 
