@@ -23,7 +23,7 @@ const NFTGallery = () => {
 
   useEffect(() => {
     getUserNFTs();
-  }, []);
+  }, [address]);
 
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap' }}>

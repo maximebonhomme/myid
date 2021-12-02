@@ -2,11 +2,10 @@ import { useMoralis, useMoralisWeb3Api } from 'react-moralis';
 import throttle from 'lodash/throttle';
 import { useDispatch } from 'react-redux';
 
-import { setAddress, setBalance, setEns } from '../reducers/wallet';
+import { setAddress, setEns } from '../reducers/wallet';
 
 const Search = () => {
   const { web3, isWeb3Enabled } = useMoralis();
-  const Web3Api = useMoralisWeb3Api();
   const dispatch = useDispatch();
 
   if (!isWeb3Enabled) return null;
@@ -27,13 +26,22 @@ const Search = () => {
   };
 
   const handleChange = async (event) => {
-    const address = event.target.value;
-    const ens = await resolveEns(address);
-    const isValid = address.startsWith('0x') || address.endsWith('.eth');
+    const value = event.target.value;
 
-    if (isValid) {
+    if (value.startsWith('0x')) {
+      const address = value;
+
       dispatch(setAddress(address));
-      dispatch(setEns(ens));
+      dispatch(setEns(null));
+    } else if (value.endsWith('.eth')) {
+      try {
+        const address = await resolveEns(value);
+
+        dispatch(setAddress(address));
+        dispatch(setEns(value));
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
