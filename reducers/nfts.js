@@ -6,7 +6,8 @@ const initialState = {
   result: [],
   status: null,
   total: 0,
-  list: []
+  list: [],
+  status: 'idle'
 };
 
 export const nftsSlice = createSlice({
@@ -33,10 +34,14 @@ export const nftsSlice = createSlice({
       state.total = total;
       state.list.push(...list);
     },
+    setStatus: (state, action) => {
+      state.status = action.payload;
+    },
     clearNFTs: () => initialState
   }
 });
 
-export const { setNFTs, addNFT, clearNFTs, updateNFTs } = nftsSlice.actions;
+export const { setNFTs, addNFT, clearNFTs, updateNFTs, setStatus } =
+  nftsSlice.actions;
 
 export default nftsSlice.reducer;

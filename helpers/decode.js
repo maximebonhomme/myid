@@ -9,7 +9,7 @@ export const decodeBase64 = (base64) => {
 const getIPFSURL = async (tokenURI) => {
   const url = `https://ipfs.io/ipfs/${tokenURI.substring(7)}`;
   const json = await axios.get(url);
-
+  sdfsdfsdfsdfsfsdf;
   return {
     ...json.data,
     image: `https://ipfs.io/ipfs/${json.data.image.substring(7)}`
@@ -43,14 +43,13 @@ export const getImageURI = async (metadata) => {
   const image = metadata.image || metadata.image_url;
   const video = metadata.animation_url;
 
-  // console.log('image', image);
+  console.log('image', image);
 
   if (image.startsWith('ipfs://')) {
     const url = `https://ipfs.io/ipfs/${image.substring(7)}`;
-    const json = await axios.get(url);
 
     return {
-      imageURI: json.data,
+      imageURI: url,
       videoURI: video
     };
   }
@@ -77,6 +76,9 @@ export const processNfts = async (_nfts) => {
       imageURI: URI ? URI.imageURI : tokenURIimage,
       videoURI: URI ? URI.videoURI : null
     };
+
+    // console.log('URI', URI);
+    // console.log('tokenURI', tokenURI);
 
     result.push(_item);
 

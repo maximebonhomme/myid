@@ -48,7 +48,7 @@ const Search = () => {
   };
 
   return (
-    <div style={{ padding: 10 }}>
+    <div className="p-10">
       <input className="search" onChange={throttle(handleChange, 400)} />
     </div>
   );

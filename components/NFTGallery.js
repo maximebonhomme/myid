@@ -2,7 +2,7 @@ import { useMoralisWeb3Api } from 'react-moralis';
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 
-import { updateNFTs } from '../reducers/nfts';
+import { updateNFTs, setStatus } from '../reducers/nfts';
 
 import { processNfts } from '../helpers/decode';
 import usePrevious from '../helpers/usePrevious';
@@ -10,20 +10,22 @@ import usePrevious from '../helpers/usePrevious';
 import config from '../config';
 
 const NFTGallery = () => {
-  const [internalPage, setPage] = useState(0);
+  const [internalPage, setPage] = useState(1);
   const dispatch = useDispatch();
   const Web3Api = useMoralisWeb3Api();
   const address = useSelector((state) => state.wallet.address);
   const nfts = useSelector((state) => state.nfts.list);
-  const { page, pageSize, total } = useSelector(
+  const { page, pageSize, total, status } = useSelector(
     (state) => state.nfts,
     shallowEqual
   );
   const previousAddress = usePrevious(address);
 
   const getUserNFTs = async () => {
+    dispatch(setStatus('loading'));
+
     const _nfts = await Web3Api.account.getNFTs({
-      address: address,
+      address,
       limit: config.listLimit,
       offset: internalPage * config.listLimit
     });
@@ -31,6 +33,7 @@ const NFTGallery = () => {
     const results = await processNfts(_nfts);
 
     dispatch(updateNFTs(results));
+    dispatch(setStatus('idle'));
   };
 
   const handleLoadMore = () => {
@@ -48,7 +51,7 @@ const NFTGallery = () => {
   }, [address, internalPage]);
 
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+    <div className="flex">
       {nfts.length > 0 &&
         nfts.map((nft) => {
           if (!nft.videoURI && !nft.imageURI) return null;
@@ -64,14 +67,15 @@ const NFTGallery = () => {
           return (
             <img
               key={nft.token_id}
-              className="nft"
+              className="w-1/2"
               src={nft.imageURI}
               alt={nft.name}
             />
           );
         })}
+      <>{status === 'loading' && <div>Fetching NFTs...</div>}</>
       <>
-        {(internalPage + 1) * pageSize < total && (
+        {internalPage * pageSize < total && (
           <button onClick={handleLoadMore}>load more</button>
         )}
       </>
