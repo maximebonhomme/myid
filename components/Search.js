@@ -1,15 +1,18 @@
-import { useMoralis, useMoralisWeb3Api } from 'react-moralis';
+/* eslint-disable @next/next/no-img-element */
+import { useMoralis } from 'react-moralis';
 import throttle from 'lodash/throttle';
 import { useDispatch } from 'react-redux';
 
-import { setAddress, setEns } from '../reducers/wallet';
+import { saveAddresses } from '../reducers/wallet';
 import { clearNFTs } from '../reducers/nfts';
+import { useEffect, useState } from 'react';
 
 const Search = () => {
   const { web3, isWeb3Enabled } = useMoralis();
   const dispatch = useDispatch();
-
-  if (!isWeb3Enabled) return null;
+  const [hasValue, setHasValue] = useState(false);
+  const [value, setValue] = useState('');
+  const [isVisible, setVisibility] = useState(true);
 
   const resolveEns = async (ens) => {
     const recordExists = await web3.eth.ens.recordExists(ens);
@@ -26,30 +29,95 @@ const Search = () => {
     return address;
   };
 
-  const handleChange = async (event) => {
+  const resolveAddress = async (address) => {
+    try {
+      await web3.eth.getBalance(address);
+      return address;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      setValue(event.target.value);
+    }
+  };
+
+  const handleChange = (event) => {
+    setHasValue(!!event.target.value);
+  };
+
+  const saveAddress = (address, ens) => {
+    dispatch(
+      saveAddresses({
+        address,
+        ens
+      })
+    );
+
+    setVisibility(false);
+  };
+
+  const handleSearch = async () => {
     dispatch(clearNFTs());
-    const value = event.target.value;
-
     if (value.startsWith('0x')) {
-      const address = value;
+      const address = await resolveAddress(value);
 
-      dispatch(setAddress(address));
-      dispatch(setEns(null));
+      if (address) {
+        saveAddress(address, null);
+      }
     } else if (value.endsWith('.eth')) {
       try {
         const address = await resolveEns(value);
 
-        dispatch(setAddress(address));
-        dispatch(setEns(value));
+        saveAddress(address, value);
       } catch (error) {
         console.log(error);
       }
     }
   };
 
+  useEffect(() => {
+    handleSearch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]);
+
+  if (!isWeb3Enabled) return null;
+
   return (
-    <div className="p-10">
-      <input className="search" onChange={throttle(handleChange, 400)} />
+    <div
+      className={`p-15 fixed top-0 left-0 bottom-0 right-0 bg-black flex items-center justify-center ${
+        !isVisible && 'hidden'
+      }`}
+    >
+      <div className="flex w-full text-18 py-20 px-15 bg-white-lightest rounded-xl">
+        <img
+          width="32"
+          height="32"
+          src="/img/icon-search.svg"
+          alt="search icon"
+          className={`opacity-${hasValue ? '1' : '03'} mr-5`}
+        />
+        <input
+          className={`bg-transparent w-full placeholder-current::placeholder focus:text-white text-${
+            hasValue ? 'white' : 'white-lighter'
+          }`}
+          placeholder="Enter ENS or wallet address"
+          onKeyPress={throttle(handleKeyPress, 400)}
+          onChange={throttle(handleChange, 400)}
+        />
+
+        <img
+          width="32"
+          height="32"
+          src="/img/icon-return.svg"
+          alt="search icon"
+          className={`ml-auto cursor-pointer ${!hasValue && 'hidden'}`}
+          onClick={throttle(handleSearch, 400)}
+        />
+      </div>
     </div>
   );
 };

@@ -16,10 +16,16 @@ export const walletSlice = createSlice({
     },
     setEns: (state, action) => {
       state.ens = action.payload;
+    },
+    saveAddresses: (state, action) => {
+      const { address, ens } = action.payload;
+      state.address = address;
+      state.ens = ens;
     }
   }
 });
 
-export const { setBalance, setAddress, setEns } = walletSlice.actions;
+export const { setBalance, setAddress, setEns, saveAddresses } =
+  walletSlice.actions;
 
 export default walletSlice.reducer;

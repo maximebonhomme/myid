@@ -2,7 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  border: 0;
+  outline: none;
+}
+
 body {
   background-color: black;
   color: white;
+}
+
+input,
+textarea {
+  outline: none;
 }
