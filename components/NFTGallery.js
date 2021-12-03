@@ -1,12 +1,22 @@
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import axios from 'axios';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { MasonryGrid } from '@egjs/react-grid';
 
 import { updateNFTs, setStatus, setNFTs } from '../reducers/nfts';
 
 import config from '../config';
+import { useEffect, useRef } from 'react';
+
+const masonryOptions = {
+  fitWidth: false,
+  columnWidth: 300,
+  gutter: 30,
+  itemSelector: '.photo-item'
+};
 
 const NFTGallery = () => {
+  const gridRef = useRef(null);
   const dispatch = useDispatch();
 
   const { address } = useSelector((state) => state.search);
@@ -61,16 +71,22 @@ const NFTGallery = () => {
     }
   };
 
+  useEffect(() => {
+    if (status === 'idle') {
+      console.log('re-rendere the grid u fuck');
+      gridRef.current.renderItems();
+    }
+  }, [status]);
+
   return (
     <>
-      <div className="flex mt-10 flex-wrap">
+      <div>
         <InfiniteScroll
           dataLength={nfts.length}
           next={handleLoadMore}
           hasMore={(page + 1) * config.listLimit <= nfts.length}
           loader={<h4>Loading...</h4>}
           // endMessage={}
-          className="flex mt-15 px-8 flex-wrap"
           refreshFunction={handleRefresh}
           pullDownToRefresh
           pullDownToRefreshThreshold={50}
@@ -81,25 +97,43 @@ const NFTGallery = () => {
             <div className="text-center py-5 w-full">Release to refresh</div>
           }
         >
-          {nfts.map((nft) => {
-            if (!nft.image_url) return null;
+          <MasonryGrid
+            ref={gridRef}
+            gap={8}
+            defaultDirection="end"
+            align="justify"
+            column={2}
+            columnSize={0}
+            columnSizeRatio={0}
+            className="overflow-hidden"
+            // onRenderComplete={handleGridRenderComplete}
+          >
+            {nfts.map((nft) => {
+              if (!nft.image_url) return null;
 
-            if (nft.animation_url && nft.animation_url.includes('.mp4')) {
+              if (nft.animation_url && nft.animation_url.includes('.mp4')) {
+                return (
+                  <div className="w-1/2 block" key={nft.token_id}>
+                    <video autoPlay loop className="w-full" muted>
+                      <source src={nft.animation_url} type="video/mp4" />
+                    </video>
+                  </div>
+                );
+              }
+
               return (
-                <div className="w-1/2 p-5" key={nft.token_id}>
-                  <video autoPlay loop className="w-full" muted>
-                    <source src={nft.animation_url} type="video/mp4" />
-                  </video>
+                <div className="w-1/2" key={nft.token_id}>
+                  {/* <div className="p-5 w-full"> */}
+                  <img
+                    className="block w-full"
+                    src={nft.image_url}
+                    alt={nft.name}
+                  />
+                  {/* </div> */}
                 </div>
               );
-            }
-
-            return (
-              <div className="w-1/2 p-5" key={nft.token_id}>
-                <img className="w-full" src={nft.image_url} alt={nft.name} />
-              </div>
-            );
-          })}
+            })}
+          </MasonryGrid>
         </InfiniteScroll>
       </div>
       <>{status === 'error' && <div>Something went wrong check console</div>}</>
