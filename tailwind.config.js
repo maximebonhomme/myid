@@ -21,6 +21,7 @@ module.exports = {
       serif: ['Merriweather', 'serif']
     },
     fontSize: {
+      14: '14px',
       18: '18px'
     },
     opacity: {
@@ -78,6 +79,18 @@ module.exports = {
       15: '15px',
       20: '20px',
       25: '25px'
+    },
+    zIndex: {
+      auto: 'auto',
+      0: '0',
+      10: '10',
+      20: '20',
+      30: '30',
+      40: '40',
+      50: '50',
+      header: '100',
+      search: '90',
+      profile: '80'
     },
     extend: {
       spacing: {

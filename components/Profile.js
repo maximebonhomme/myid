@@ -5,7 +5,7 @@ const Profile = ({ address, ens }) => {
   )}`;
 
   return (
-    <div className="sticky top-0 bg-black">
+    <div className="sticky top-0 bg-black z-profile">
       <div
         className="flex items-center justify-center text-18"
         style={{ height: 260 }}

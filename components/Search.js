@@ -1,19 +1,21 @@
 /* eslint-disable @next/next/no-img-element */
 import { useMoralis } from 'react-moralis';
 import throttle from 'lodash/throttle';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { saveAddresses } from '../reducers/wallet';
 import { clearNFTs } from '../reducers/nfts';
 import { useEffect, useState } from 'react';
+
+import { setVisibility } from '../reducers/search';
 
 const Search = () => {
   const { web3, isWeb3Enabled } = useMoralis();
   const dispatch = useDispatch();
   const [hasValue, setHasValue] = useState(false);
   const [value, setValue] = useState('');
-  const [isVisible, setVisibility] = useState(true);
   const [error, setError] = useState(null);
+  const { isVisible } = useSelector((state) => state.search);
 
   const resolveEns = async (ens) => {
     const recordExists = await web3.eth.ens.recordExists(ens);
@@ -60,7 +62,7 @@ const Search = () => {
       })
     );
 
-    setVisibility(false);
+    dispatch(setVisibility(false));
   };
 
   const handleSearch = async () => {
@@ -99,7 +101,7 @@ const Search = () => {
 
   return (
     <div
-      className={`p-15 fixed top-0 left-0 bottom-0 right-0 bg-black flex items-center justify-center ${
+      className={`p-15 fixed z-search top-0 left-0 bottom-0 right-0 bg-black flex items-center justify-center ${
         !isVisible && 'hidden'
       }`}
     >
