@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useState } from 'react';
-import { useMoralis, useMoralisWeb3Api } from 'react-moralis';
+import { useMoralis } from 'react-moralis';
 import throttle from 'lodash/throttle';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -8,13 +8,11 @@ import { saveAddresses } from '../reducers/search';
 import { clearNFTs, setNFTs, setStatus } from '../reducers/nfts';
 import { setVisibility } from '../reducers/search';
 
-import { processNfts } from '../helpers/decode';
-
 import config from '../config';
+import axios from 'axios';
 
 const Search = () => {
   const { web3, isWeb3Enabled } = useMoralis();
-  const Web3Api = useMoralisWeb3Api();
   const dispatch = useDispatch();
   const [hasValue, setHasValue] = useState(false);
   const [value, setValue] = useState('');
@@ -73,15 +71,28 @@ const Search = () => {
   const triggerNftSearch = async (address) => {
     dispatch(setStatus('loading'));
 
-    const _nfts = await Web3Api.account.getNFTs({
-      address,
-      limit: config.listLimit
-    });
-
-    const results = await processNfts(_nfts);
-
-    dispatch(setNFTs(results));
-    dispatch(setStatus('idle'));
+    try {
+      const opensea = await axios.get('/api/nfts', {
+        params: {
+          address,
+          limit: config.listLimit,
+          offset: 0
+        }
+      });
+      dispatch(
+        setNFTs({
+          page: 0,
+          pageSize: config.listLimit,
+          status: 'ok',
+          total: opensea.data.assets.length,
+          list: opensea.data.assets
+        })
+      );
+      dispatch(setStatus('idle'));
+    } catch (error) {
+      dispatch(setStatus('error'));
+      console.log(error);
+    }
   };
 
   const handleSearch = async () => {
