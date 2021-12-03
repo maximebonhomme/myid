@@ -15,7 +15,7 @@ const Header = () => {
   };
 
   return (
-    <header className="flex justify-between items-center z-header absolute top-0 left-0 right-0 p-15">
+    <header className="flex justify-between items-center z-header fixed top-0 left-0 right-0 p-15">
       <img
         className="cursor-pointer"
         width="32"

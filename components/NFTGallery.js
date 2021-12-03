@@ -74,11 +74,11 @@ const NFTGallery = () => {
           );
         })}
       <>{status === 'loading' && <div>Fetching NFTs...</div>}</>
-      <>
+      {/* <>
         {internalPage + 1 * pageSize < total && (
           <button onClick={handleLoadMore}>load more</button>
         )}
-      </>
+      </> */}
     </div>
   );
 };
