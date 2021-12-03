@@ -79,23 +79,23 @@ const NFTGallery = () => {
   }, [status]);
 
   return (
-    <>
+    <section className="mb-80">
       <div>
         <InfiniteScroll
           dataLength={nfts.length}
           next={handleLoadMore}
           hasMore={(page + 1) * config.listLimit <= nfts.length}
-          loader={<h4>Loading...</h4>}
+          // loader={<h4>Loading...</h4>}
           // endMessage={}
-          refreshFunction={handleRefresh}
-          pullDownToRefresh
-          pullDownToRefreshThreshold={50}
-          pullDownToRefreshContent={
-            <div className="text-center py-5 w-full">Pull down to refresh</div>
-          }
-          releaseToRefreshContent={
-            <div className="text-center py-5 w-full">Release to refresh</div>
-          }
+          // refreshFunction={handleRefresh}
+          // pullDownToRefresh
+          // pullDownToRefreshThreshold={50}
+          // pullDownToRefreshContent={
+          //   <div className="text-center py-5 w-full">Pull down to refresh</div>
+          // }
+          // releaseToRefreshContent={
+          //   <div className="text-center py-5 w-full">Release to refresh</div>
+          // }
         >
           <MasonryGrid
             ref={gridRef}
@@ -137,7 +137,7 @@ const NFTGallery = () => {
         </InfiniteScroll>
       </div>
       <>{status === 'error' && <div>Something went wrong check console</div>}</>
-    </>
+    </section>
   );
 };
 

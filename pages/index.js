@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 
-import NFTGallery from '../components/NFTGallery';
+import SearchResults from '../components/SearchResults';
 import Search from '../components/Search';
 import Profile from '../components/Profile';
 import Header from '../components/Header';
@@ -15,7 +15,7 @@ export default function Home() {
       {address && (
         <>
           <Profile address={address} ens={ens} />
-          <NFTGallery />
+          <SearchResults />
         </>
       )}
     </div>

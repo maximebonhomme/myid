@@ -71,7 +71,10 @@ module.exports = {
       10: '10px',
       15: '15px',
       20: '20px',
-      25: '25px'
+      25: '25px',
+      30: '30px',
+      50: '50px',
+      80: '80px'
     },
     margin: {
       auto: 'auto',
@@ -80,7 +83,10 @@ module.exports = {
       10: '10px',
       15: '15px',
       20: '20px',
-      25: '25px'
+      25: '25px',
+      30: '30px',
+      50: '50px',
+      80: '80px'
     },
     zIndex: {
       auto: 'auto',
