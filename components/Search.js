@@ -13,6 +13,7 @@ const Search = () => {
   const [hasValue, setHasValue] = useState(false);
   const [value, setValue] = useState('');
   const [isVisible, setVisibility] = useState(true);
+  const [error, setError] = useState(null);
 
   const resolveEns = async (ens) => {
     const recordExists = await web3.eth.ens.recordExists(ens);
@@ -40,6 +41,8 @@ const Search = () => {
   };
 
   const handleKeyPress = (event) => {
+    setError(false);
+
     if (event.key === 'Enter') {
       setValue(event.target.value);
     }
@@ -62,11 +65,14 @@ const Search = () => {
 
   const handleSearch = async () => {
     dispatch(clearNFTs());
+
     if (value.startsWith('0x')) {
       const address = await resolveAddress(value);
 
       if (address) {
         saveAddress(address, null);
+      } else {
+        setError(true);
       }
     } else if (value.endsWith('.eth')) {
       try {
@@ -75,12 +81,17 @@ const Search = () => {
         saveAddress(address, value);
       } catch (error) {
         console.log(error);
+        setError(true);
       }
+    } else {
+      setError(true);
     }
   };
 
   useEffect(() => {
-    handleSearch();
+    if (hasValue) {
+      handleSearch();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
@@ -92,7 +103,11 @@ const Search = () => {
         !isVisible && 'hidden'
       }`}
     >
-      <div className="flex w-full text-18 py-20 px-15 bg-white-lightest rounded-xl">
+      <div
+        className={`flex w-full text-18 py-20 px-15 bg-white-lightest rounded-xl ${
+          error ? 'shake' : ''
+        }`}
+      >
         <img
           width="32"
           height="32"

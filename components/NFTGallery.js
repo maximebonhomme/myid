@@ -51,7 +51,7 @@ const NFTGallery = () => {
   }, [address, internalPage]);
 
   return (
-    <div className="flex mt-15 px-8">
+    <div className="flex mt-15 px-8 flex-wrap">
       {nfts.length > 0 &&
         nfts.map((nft) => {
           if (!nft.videoURI && !nft.imageURI) return null;
