@@ -73,7 +73,6 @@ const NFTGallery = () => {
 
   useEffect(() => {
     if (status === 'idle') {
-      console.log('re-rendere the grid u fuck');
       gridRef.current.renderItems();
     }
   }, [status]);
@@ -85,17 +84,6 @@ const NFTGallery = () => {
           dataLength={nfts.length}
           next={handleLoadMore}
           hasMore={(page + 1) * config.listLimit <= nfts.length}
-          // loader={<h4>Loading...</h4>}
-          // endMessage={}
-          // refreshFunction={handleRefresh}
-          // pullDownToRefresh
-          // pullDownToRefreshThreshold={50}
-          // pullDownToRefreshContent={
-          //   <div className="text-center py-5 w-full">Pull down to refresh</div>
-          // }
-          // releaseToRefreshContent={
-          //   <div className="text-center py-5 w-full">Release to refresh</div>
-          // }
         >
           <MasonryGrid
             ref={gridRef}
@@ -106,7 +94,6 @@ const NFTGallery = () => {
             columnSize={0}
             columnSizeRatio={0}
             className="overflow-hidden"
-            // onRenderComplete={handleGridRenderComplete}
           >
             {nfts.map((nft) => {
               if (!nft.image_url) return null;
@@ -123,20 +110,22 @@ const NFTGallery = () => {
 
               return (
                 <div className="w-1/2" key={nft.token_id}>
-                  {/* <div className="p-5 w-full"> */}
                   <img
                     className="block w-full"
                     src={nft.image_url}
                     alt={nft.name}
                   />
-                  {/* </div> */}
                 </div>
               );
             })}
           </MasonryGrid>
         </InfiniteScroll>
       </div>
-      <>{status === 'error' && <div>Something went wrong check console</div>}</>
+      <>
+        {status === 'error' && (
+          <div>Something went wrong check console tyvm</div>
+        )}
+      </>
     </section>
   );
 };
