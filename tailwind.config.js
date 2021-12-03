@@ -13,7 +13,8 @@ module.exports = {
       black: '#000',
       white: '#fff',
       'white-lightest': 'rgba(255, 255, 255, 0.03)',
-      'white-lighter': 'rgba(255, 255, 255, 0.1)'
+      'white-lighter': 'rgba(255, 255, 255, 0.1)',
+      'white-light': 'rgba(255, 255, 255, 0.3)'
     },
     fontFamily: {
       sans: ['Graphik', 'sans-serif'],
@@ -24,6 +25,9 @@ module.exports = {
     },
     opacity: {
       '03': 0.3
+    },
+    borderWidth: {
+      1: '1px'
     },
     width: {
       auto: 'auto',
@@ -61,6 +65,7 @@ module.exports = {
     },
     padding: {
       5: '5px',
+      8: '8px',
       10: '10px',
       15: '15px',
       20: '20px',
@@ -68,6 +73,7 @@ module.exports = {
     },
     margin: {
       5: '5px',
+      8: '8px',
       10: '10px',
       15: '15px',
       20: '20px',
@@ -76,6 +82,7 @@ module.exports = {
     extend: {
       spacing: {
         5: '5px',
+        8: '8px',
         10: '10px',
         15: '15px',
         20: '20px',

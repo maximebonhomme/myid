@@ -51,7 +51,7 @@ const NFTGallery = () => {
   }, [address, internalPage]);
 
   return (
-    <div className="flex">
+    <div className="flex mt-15 px-8">
       {nfts.length > 0 &&
         nfts.map((nft) => {
           if (!nft.videoURI && !nft.imageURI) return null;
@@ -75,7 +75,7 @@ const NFTGallery = () => {
         })}
       <>{status === 'loading' && <div>Fetching NFTs...</div>}</>
       <>
-        {internalPage * pageSize < total && (
+        {internalPage + 1 * pageSize < total && (
           <button onClick={handleLoadMore}>load more</button>
         )}
       </>
