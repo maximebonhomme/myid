@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useMoralis } from 'react-moralis';
 import throttle from 'lodash/throttle';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,6 +12,7 @@ import config from '../config';
 import axios from 'axios';
 
 const Search = () => {
+  const inputRef = useRef(null);
   const { web3, isWeb3Enabled } = useMoralis();
   const dispatch = useDispatch();
   const [hasValue, setHasValue] = useState(false);
@@ -121,6 +122,10 @@ const Search = () => {
   };
 
   useEffect(() => {
+    if (isVisible) inputRef.current.focus();
+  }, [isVisible]);
+
+  useEffect(() => {
     if (hasValue) {
       handleSearch();
     }
@@ -148,12 +153,14 @@ const Search = () => {
           className={`opacity-${hasValue ? '1' : '03'} mr-5`}
         />
         <input
+          ref={inputRef}
           className={`bg-transparent w-full placeholder-current::placeholder focus:text-white text-${
             hasValue ? 'white' : 'white-lighter'
           }`}
           placeholder="Enter ENS or wallet address"
           onKeyPress={throttle(handleKeyPress, 400)}
           onChange={throttle(handleChange, 400)}
+          autoFocus
         />
 
         <img
