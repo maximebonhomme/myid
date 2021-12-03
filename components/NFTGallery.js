@@ -8,6 +8,7 @@ import config from '../config';
 
 const NFTGallery = () => {
   const dispatch = useDispatch();
+
   const { address } = useSelector((state) => state.search);
   const nfts = useSelector((state) => state.nfts.list);
   const { page, status } = useSelector((state) => state.nfts, shallowEqual);
@@ -62,17 +63,13 @@ const NFTGallery = () => {
 
   return (
     <>
-      <div className="flex mt-15 px-8 flex-wrap">
+      <div className="flex mt-10 flex-wrap">
         <InfiniteScroll
-          dataLength={nfts.length} //This is important field to render the next data
+          dataLength={nfts.length}
           next={handleLoadMore}
           hasMore={(page + 1) * config.listLimit <= nfts.length}
           loader={<h4>Loading...</h4>}
-          endMessage={
-            <p style={{ textAlign: 'center' }}>
-              <b>Yay! You have seen it all</b>
-            </p>
-          }
+          // endMessage={}
           className="flex mt-15 px-8 flex-wrap"
           refreshFunction={handleRefresh}
           pullDownToRefresh
@@ -89,19 +86,18 @@ const NFTGallery = () => {
 
             if (nft.animation_url && nft.animation_url.includes('.mp4')) {
               return (
-                <video autoPlay loop className="w-1/2" muted>
-                  <source src={nft.animation_url} type="video/mp4" />
-                </video>
+                <div className="w-1/2 p-5" key={nft.token_id}>
+                  <video autoPlay loop className="w-full" muted>
+                    <source src={nft.animation_url} type="video/mp4" />
+                  </video>
+                </div>
               );
             }
 
             return (
-              <img
-                key={nft.token_id}
-                className="w-1/2"
-                src={nft.image_url}
-                alt={nft.name}
-              />
+              <div className="w-1/2 p-5" key={nft.token_id}>
+                <img className="w-full" src={nft.image_url} alt={nft.name} />
+              </div>
             );
           })}
         </InfiniteScroll>

@@ -65,6 +65,7 @@ module.exports = {
       fit: 'fit-content'
     },
     padding: {
+      auto: 'auto',
       5: '5px',
       8: '8px',
       10: '10px',
@@ -73,6 +74,7 @@ module.exports = {
       25: '25px'
     },
     margin: {
+      auto: 'auto',
       5: '5px',
       8: '8px',
       10: '10px',
