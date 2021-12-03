@@ -13,7 +13,7 @@ const NFTGallery = () => {
   const [internalPage, setPage] = useState(1);
   const dispatch = useDispatch();
   const Web3Api = useMoralisWeb3Api();
-  const address = useSelector((state) => state.wallet.address);
+  const { address } = useSelector((state) => state.search);
   const nfts = useSelector((state) => state.nfts.list);
   const { page, pageSize, total, status } = useSelector(
     (state) => state.nfts,
@@ -21,34 +21,34 @@ const NFTGallery = () => {
   );
   const previousAddress = usePrevious(address);
 
-  const getUserNFTs = async () => {
-    dispatch(setStatus('loading'));
+  // const getUserNFTs = async () => {
+  //   dispatch(setStatus('loading'));
 
-    const _nfts = await Web3Api.account.getNFTs({
-      address,
-      limit: config.listLimit,
-      offset: internalPage * config.listLimit
-    });
+  //   const _nfts = await Web3Api.account.getNFTs({
+  //     address,
+  //     limit: config.listLimit,
+  //     offset: internalPage * config.listLimit
+  //   });
 
-    const results = await processNfts(_nfts);
+  //   const results = await processNfts(_nfts);
 
-    dispatch(updateNFTs(results));
-    dispatch(setStatus('idle'));
-  };
+  //   dispatch(updateNFTs(results));
+  //   dispatch(setStatus('idle'));
+  // };
 
-  const handleLoadMore = () => {
-    const newPage = internalPage + 1;
-    console.log('newPage', newPage);
-    setPage(newPage);
-  };
+  // const handleLoadMore = () => {
+  //   const newPage = internalPage + 1;
+  //   console.log('newPage', newPage);
+  //   setPage(newPage);
+  // };
 
-  useEffect(() => {
-    getUserNFTs();
+  // useEffect(() => {
+  //   getUserNFTs();
 
-    if (previousAddress !== address) {
-      setPage(0);
-    }
-  }, [address, internalPage]);
+  //   if (previousAddress !== address) {
+  //     setPage(0);
+  //   }
+  // }, [address, internalPage]);
 
   return (
     <div className="flex mt-15 px-8 flex-wrap">

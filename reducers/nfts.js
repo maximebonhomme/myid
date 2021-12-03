@@ -15,12 +15,13 @@ export const nftsSlice = createSlice({
   initialState,
   reducers: {
     setNFTs: (state, action) => {
-      const { page, page_size, result, status, total } = action.payload;
+      const { page, page_size, result, status, total, list } = action.payload;
       state.page = page;
       state.pageSize = page_size;
       state.result = result;
       state.status = status;
       state.total = total;
+      state.list = list;
     },
     addNFTs: (state, action) => {
       state.list.push(...action.payload);

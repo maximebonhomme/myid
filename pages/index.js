@@ -8,7 +8,7 @@ import Profile from '../components/Profile';
 import Header from '../components/Header';
 
 export default function Home() {
-  const wallet = useSelector((state) => state.wallet);
+  const { address, ens } = useSelector((state) => state.search);
 
   return (
     <>
@@ -17,9 +17,9 @@ export default function Home() {
       {/* <WalletConnect /> */}
 
       <Search />
-      {wallet.address && (
+      {address && (
         <>
-          <Profile address={wallet.address} ens={wallet.ens} />
+          <Profile address={address} ens={ens} />
           <NFTGallery />
         </>
       )}

@@ -1,16 +1,20 @@
 /* eslint-disable @next/next/no-img-element */
-import { useMoralis } from 'react-moralis';
+import { useEffect, useState } from 'react';
+import { useMoralis, useMoralisWeb3Api } from 'react-moralis';
 import throttle from 'lodash/throttle';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { saveAddresses } from '../reducers/wallet';
-import { clearNFTs } from '../reducers/nfts';
-import { useEffect, useState } from 'react';
-
+import { saveAddresses } from '../reducers/search';
+import { clearNFTs, setNFTs, setStatus } from '../reducers/nfts';
 import { setVisibility } from '../reducers/search';
+
+import { processNfts } from '../helpers/decode';
+
+import config from '../config';
 
 const Search = () => {
   const { web3, isWeb3Enabled } = useMoralis();
+  const Web3Api = useMoralisWeb3Api();
   const dispatch = useDispatch();
   const [hasValue, setHasValue] = useState(false);
   const [value, setValue] = useState('');
@@ -63,6 +67,21 @@ const Search = () => {
     );
 
     dispatch(setVisibility(false));
+    triggerNftSearch(address);
+  };
+
+  const triggerNftSearch = async (address) => {
+    dispatch(setStatus('loading'));
+
+    const _nfts = await Web3Api.account.getNFTs({
+      address,
+      limit: config.listLimit
+    });
+
+    const results = await processNfts(_nfts);
+
+    dispatch(setNFTs(results));
+    dispatch(setStatus('idle'));
   };
 
   const handleSearch = async () => {
