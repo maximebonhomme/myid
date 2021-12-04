@@ -110,9 +110,11 @@ const NFTGallery = () => {
 
               return (
                 <div className="w-1/2" key={nft.token_id}>
+                  // esling
                   <img
                     className="block w-full"
-                    src={nft.image_url}
+                    data-src={nft.image_url}
+                    class="lazyload"
                     alt={nft.name}
                   />
                 </div>
