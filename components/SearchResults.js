@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import axios from 'axios';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -110,11 +111,9 @@ const NFTGallery = () => {
 
               return (
                 <div className="w-1/2" key={nft.token_id}>
-                  // esling
                   <img
                     className="block w-full"
-                    data-src={nft.image_url}
-                    class="lazyload"
+                    src={nft.image_url}
                     alt={nft.name}
                   />
                 </div>
