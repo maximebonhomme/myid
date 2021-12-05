@@ -122,7 +122,7 @@ const Search = () => {
   };
 
   useEffect(() => {
-    if (isVisible) inputRef.current.focus();
+    if (isVisible && inputRef.current) inputRef.current.focus();
   }, [isVisible]);
 
   useEffect(() => {
