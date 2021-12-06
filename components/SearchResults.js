@@ -9,13 +9,6 @@ import { updateNFTs, setStatus, setNFTs } from '../reducers/nfts';
 import config from '../config';
 import { useEffect, useRef } from 'react';
 
-const masonryOptions = {
-  fitWidth: false,
-  columnWidth: 300,
-  gutter: 30,
-  itemSelector: '.photo-item'
-};
-
 const NFTGallery = () => {
   const gridRef = useRef(null);
   const dispatch = useDispatch();
@@ -79,7 +72,7 @@ const NFTGallery = () => {
   }, [status]);
 
   return (
-    <section className="mb-80">
+    <section className="mt-20 mb-80">
       <div>
         <InfiniteScroll
           dataLength={nfts.length}
@@ -112,6 +105,8 @@ const NFTGallery = () => {
               return (
                 <div className="w-1/2" key={nft.token_id}>
                   <img
+                    layout="fill"
+                    objectFit="contain"
                     className="block w-full"
                     src={nft.image_url}
                     alt={nft.name}

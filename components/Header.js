@@ -1,6 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import { useDispatch } from 'react-redux';
 
+import WalletConnect from './WalletConnect';
+
 import { setVisibility } from '../reducers/search';
 
 const Header = () => {
@@ -8,10 +10,6 @@ const Header = () => {
 
   const openSearch = () => {
     dispatch(setVisibility(true));
-  };
-
-  const connectWallet = () => {
-    console.log('not done yet');
   };
 
   return (
@@ -24,9 +22,7 @@ const Header = () => {
         alt="search icon"
         onClick={openSearch}
       />
-      <p className="text-14 cursor-pointer" onClick={connectWallet}>
-        Connect Wallet
-      </p>
+      <WalletConnect />
     </header>
   );
 };

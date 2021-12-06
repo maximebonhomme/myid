@@ -8,6 +8,8 @@ import { saveAddresses } from '../reducers/search';
 import { clearNFTs, setNFTs, setStatus } from '../reducers/nfts';
 import { setVisibility } from '../reducers/search';
 
+import { resolveEns, resolveAddress } from '../helpers/web3';
+
 import config from '../config';
 import axios from 'axios';
 
@@ -19,31 +21,6 @@ const Search = () => {
   const [value, setValue] = useState('');
   const [error, setError] = useState(null);
   const { isVisible } = useSelector((state) => state.search);
-
-  const resolveEns = async (ens) => {
-    const recordExists = await web3.eth.ens.recordExists(ens);
-    let address = null;
-
-    if (!recordExists) return null;
-
-    try {
-      address = await web3.eth.ens.getAddress(ens);
-    } catch (error) {
-      console.log(error);
-    }
-
-    return address;
-  };
-
-  const resolveAddress = async (address) => {
-    try {
-      await web3.eth.getBalance(address);
-      return address;
-    } catch (error) {
-      console.log(error);
-      return null;
-    }
-  };
 
   const handleKeyPress = (event) => {
     setError(false);
@@ -100,7 +77,7 @@ const Search = () => {
     dispatch(clearNFTs());
 
     if (value.startsWith('0x')) {
-      const address = await resolveAddress(value);
+      const address = await resolveAddress(web3, value);
 
       if (address) {
         saveAddress(address, null);
@@ -109,7 +86,7 @@ const Search = () => {
       }
     } else if (value.endsWith('.eth')) {
       try {
-        const address = await resolveEns(value);
+        const address = await resolveEns(web3, value);
 
         saveAddress(address, value);
       } catch (error) {

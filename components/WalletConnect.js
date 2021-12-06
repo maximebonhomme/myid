@@ -3,11 +3,10 @@ import { useDispatch } from 'react-redux';
 import { useMoralis, useMoralisWeb3Api } from 'react-moralis';
 
 import { setBalance, setAddress } from '../reducers/wallet';
-
-import Avatar from './Avatar';
+import { getEns } from '../helpers/web3';
 
 const WalletConnect = () => {
-  const { authenticate, isAuthenticated, user, logout } = useMoralis();
+  const { authenticate, isAuthenticated, user, web3 } = useMoralis();
   const Web3Api = useMoralisWeb3Api();
   const dispatch = useDispatch();
 
@@ -18,6 +17,8 @@ const WalletConnect = () => {
   const setAccount = async () => {
     if (isAuthenticated) {
       const address = user.get('ethAddress');
+      const ens = await getEns(web3, address);
+      console.log('ens', ens);
       dispatch(setAddress(address));
 
       const balanceResponse = await Web3Api.account.getNativeBalance({
@@ -29,17 +30,25 @@ const WalletConnect = () => {
     }
   };
 
+  const toggleMenu = () => {
+    console.log('toggle menu');
+  };
+
   useEffect(() => {
     setAccount();
     // eslint-disable-next-line
   }, [isAuthenticated]);
 
   return (
-    <div className="connect">
+    <div className="flex">
       {isAuthenticated ? (
-        <Avatar address={user.get('ethAddress')} ens={null} onClick={logout} />
+        <button onClick={toggleMenu}>
+          <img width={32} height={32} src="/img/icon-menu.svg" />
+        </button>
       ) : (
-        <button onClick={handleAuthenticate}>Connect Wallet</button>
+        <button className="text-16" onClick={handleAuthenticate}>
+          Connect Wallet
+        </button>
       )}
     </div>
   );
