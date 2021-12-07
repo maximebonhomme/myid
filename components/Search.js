@@ -131,6 +131,7 @@ const Search = () => {
         />
         <input
           ref={inputRef}
+          autoComplete="off"
           className={`bg-transparent w-full placeholder-current::placeholder focus:text-white text-${
             hasValue ? 'white' : 'white-lighter'
           }`}
